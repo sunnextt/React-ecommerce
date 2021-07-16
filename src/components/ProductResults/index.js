@@ -11,7 +11,7 @@ const mapState = ({ productsData }) => ({
   products: productsData.products
 });
 
-const ProductResults = ({ }) => {
+const ProductResults = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { filterType } = useParams();
@@ -19,11 +19,12 @@ const ProductResults = ({ }) => {
 
   const { data, queryDoc, isLastPage } = products;
 
+
   useEffect(() => {
     dispatch(
       fetchProductsStart({ filterType })
     )
-  }, [filterType]);
+  }, [dispatch,filterType]);
 
   const handleFilter = (e) => {
     const nextFilter = e.target.value;
