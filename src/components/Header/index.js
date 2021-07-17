@@ -5,7 +5,7 @@ import { signOutUserStart } from './../../redux/User/user.actions';
 import { selectCartItemsCount } from './../../redux/Cart/cart.selectors';
 import './styles.scss';
 
-import Logo from './../../assets/logo.png';
+// import Logo from './../../assets/logo.png';
 
 const mapState = (state) => ({
   currentUser: state.user.currentUser,
@@ -30,8 +30,9 @@ const Header = props => {
     <header className="header">
       <div className="wrap">
         <div className="logo">
-          <Link to="/">
-            <img src={Logo} alt="SimpleTut LOGO" />
+          <Link to="/" style={{fontSize: "22px", fontWeight: 600, color: "grey"}}>
+            {/* <img src={Logo} alt="SimpleTut LOGO" /> */}
+            Sammy Dev
           </Link>
         </div>
 
