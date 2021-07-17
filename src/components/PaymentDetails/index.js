@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import FormInput from './../forms/FormInput';
-import Button from './../forms/Button';
 import { CountryDropdown } from 'react-country-region-selector';
-import { apiInstance } from './../../Utils';
 import { selectCartTotal, selectCartItemsCount, selectCartItems } from './../../redux/Cart/cart.selectors';
 import { saveOrderHistory } from './../../redux/Orders/orders.actions';
-// import { clearCart } from './../../redux/Cart/cart.actions';
 import { createStructuredSelector } from 'reselect';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import './styles.scss';
+
+import { usePaystackPayment } from 'react-paystack';
+
+import {publicKey} from '../../paystack/PaystackPublickey'
+
 
 const initialAddressState = {
   line1: '',
@@ -27,22 +28,71 @@ const mapState = createStructuredSelector({
   cartItems: selectCartItems,
 });
 
+const mapState2 = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
 const PaymentDetails = () => {
-  const stripe = useStripe();
-  const elements = useElements();
+
   const history = useHistory();
   const { total, itemCount, cartItems } = useSelector(mapState);
+  const { currentUser } = useSelector(mapState2);
   const dispatch = useDispatch();
   const [billingAddress, setBillingAddress] = useState({ ...initialAddressState });
   const [shippingAddress, setShippingAddress] = useState({ ...initialAddressState });
   const [recipientName, setRecipientName] = useState('');
   const [nameOnCard, setNameOnCard] = useState('');
+  
+  const {email} = currentUser
+  
+  const config = {
+    reference: (new Date()).getTime(),
+    email,
+    amount: total * 100,
+    publicKey,
+  };
+  
+  const initializePayment = usePaystackPayment(config);
+
+
+  const onSuccess = (reference) => {
+    console.log(reference);
+    if (reference.status === "success") {
+      
+      const configOrder = {
+      orderTotal: total,
+      orderItems: cartItems.map(item => {
+        const { documentID, productThumbnail, productName,
+          productPrice, quantity } = item;
+
+        return {
+          documentID,
+          productThumbnail,
+          productName,
+          productPrice,
+          quantity
+        };
+      })
+    }
+
+    dispatch(
+      saveOrderHistory(configOrder)
+    );
+    
+    }
+  };
+
+  const onClose = () => {
+    console.log('closed')
+  }
+
+
 
   useEffect(() => {
     if (itemCount < 1) {
       history.push('/dashboard');
     }
-
+    
   }, [history,itemCount]);
 
   const handleShipping = evt => {
@@ -63,7 +113,6 @@ const PaymentDetails = () => {
 
   const handleFormSubmit = async evt => {
     evt.preventDefault();
-    const cardElement = elements.getElement('card');
 
     if (
       !shippingAddress.line1 || !shippingAddress.city ||
@@ -72,72 +121,20 @@ const PaymentDetails = () => {
       !billingAddress.city || !billingAddress.state ||
       !billingAddress.postal_code || !billingAddress.country ||
       !recipientName || !nameOnCard
-    ) {
-      return;
-    }
-
-    apiInstance.post('/payments/create', {
-      amount: total * 100,
-      shipping: {
-        name: recipientName,
-        address: {
-          ...shippingAddress
-        }
+      ) {
+        return;
       }
-    }).then(({ data: clientSecret }) => {
 
-      stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name: nameOnCard,
-          address: {
-            ...billingAddress
-          }
-        }
-      }).then(({ paymentMethod }) => {
-
-        stripe.confirmCardPayment(clientSecret, {
-          payment_method: paymentMethod.id
-        })
-        .then(({ paymentIntent }) => {
-
-          const configOrder = {
-            orderTotal: total,
-            orderItems: cartItems.map(item => {
-              const { documentID, productThumbnail, productName,
-                productPrice, quantity } = item;
-
-              return {
-                documentID,
-                productThumbnail,
-                productName,
-                productPrice,
-                quantity
-              };
-            })
-          }
-
-          dispatch(
-            saveOrderHistory(configOrder)
-          );
-        });
-
-      })
-
-
-    });
+      initializePayment(onSuccess, onClose)
 
   };
 
-  const configCardElement = {
-    iconStyle: 'solid',
-    style: {
-      base: {
-        fontSize: '16px'
-      }
-    },
-    hidePostalCode: true
+    const PaystackHookExample = () => {
+      return (
+        <div>
+            <button onClick={handleFormSubmit}>PAY NOW</button>
+        </div>
+      );
   };
 
   return (
@@ -291,22 +288,7 @@ const PaymentDetails = () => {
           </div>
 
         </div>
-
-        <div className="group">
-          <h2>
-            Card Details
-          </h2>
-
-          <CardElement
-            options={configCardElement}
-          />
-        </div>
-
-        <Button
-          type="submit"
-        >
-          Pay Now
-        </Button>
+        <PaystackHookExample />
 
       </form>
     </div>

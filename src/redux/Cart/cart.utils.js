@@ -16,7 +16,7 @@ export const handleAddToCart = ({
 
   if (cartItemExists) {
     return prevCartItems.map(cartItem =>
-      cartItem.documentID == nextCartItem.documentID
+      cartItem.documentID === nextCartItem.documentID
         ? {
           ...cartItem,
           quantity: cartItem.quantity + quantityIncrement
