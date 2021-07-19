@@ -17,6 +17,10 @@ export function* getSnapshotFromUserAuth(user, additionalData = {}) {
 
   } catch (err) {
     // console.log(err);
+    yield put(
+    userError([err.message])
+    );
+
   }
 }
 
@@ -27,6 +31,9 @@ export function* emailSignIn({ payload: { email, password } }) {
 
   } catch (err) {
     // console.log(err);
+    yield put(
+    userError([err.message])
+    );
   }
 }
 
@@ -42,6 +49,9 @@ export function* isUserAuthenticated() {
 
   } catch (err) {
     // console.log(err);
+    yield put(
+    userError([err.message])
+    );
   }
 }
 
@@ -87,6 +97,10 @@ export function* signUpUser({ payload: {
 
   } catch (err) {
     console.log(err);
+    yield put(
+    userError([err.message])
+    );
+
   }
 
 }
@@ -104,8 +118,8 @@ export function* resetPassword({ payload: { email }}) {
 
   } catch (err) {
     yield put(
-      userError(err)
-    )
+    userError([err.message])
+    );
   }
 }
 
@@ -120,6 +134,10 @@ export function* googleSignIn() {
 
   } catch (err) {
     // console.log(err);
+    yield put(
+    userError([err.message])
+    );
+
   }
 }
 

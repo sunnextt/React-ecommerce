@@ -119,7 +119,6 @@ const Signup = props => {
           <Link to="/login">
             LogIn
           </Link>
-          {` | `}
           <Link to="/recovery">
             Reset Password
             </Link>
