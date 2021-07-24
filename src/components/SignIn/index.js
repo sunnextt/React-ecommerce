@@ -19,6 +19,7 @@ const SignIn = props => {
   const { currentUser } = useSelector(mapState);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
+  const [submit, setSubmit] = useState(false)
 
   useEffect(() => {
     if (currentUser) {
@@ -35,7 +36,11 @@ const SignIn = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    setSubmit(true)
     dispatch(emailSignInStart({ email, password }));
+    window.setTimeout(() => {
+    setSubmit(false)
+    }, 10000);
   }
 
   const handleGoogleSignIn = () => {
@@ -68,7 +73,7 @@ const SignIn = props => {
           />
 
           <Button type="submit">
-            LogIn
+            {!submit ? "LogIn" : "login..."}
           </Button>
 
           <div className="socialSignin">

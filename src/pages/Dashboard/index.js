@@ -18,7 +18,7 @@ const Dashboard = props => {
       getUserOrderHistory(currentUser.id)
     );
 
-  }, []);
+  }, [dispatch,currentUser.id]);
 
   return (
     <div>

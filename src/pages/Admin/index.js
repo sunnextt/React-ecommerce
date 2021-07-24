@@ -29,7 +29,7 @@ const Admin = props => {
     dispatch(
       fetchProductsStart()
     );
-  }, []);
+  }, [dispatch]);
 
   const toggleModal = () => setHideModal(!hideModal);
 

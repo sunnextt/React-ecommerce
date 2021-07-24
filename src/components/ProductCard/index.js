@@ -34,7 +34,7 @@ const ProductCard = () => {
       )
     }
 
-  }, []);
+  }, [dispatch, productID]);
 
   const handleAddToCart = (product) => {
     if (!product) return;

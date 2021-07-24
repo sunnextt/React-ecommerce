@@ -51,7 +51,7 @@ const OrderDetails = ({ order }) => {
         setOrderDetails({})
       );
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <TableContainer>
