@@ -56,7 +56,7 @@ const Signup = props => {
     }));
     if (errors) {
       // setSubmit(false)
-      window.setTimeout(() => {
+      setTimeout(() => {
         setErrors([])
       }, 5000);
     }
