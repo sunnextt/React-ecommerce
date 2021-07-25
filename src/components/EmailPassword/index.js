@@ -35,14 +35,6 @@ const EmailPassword = props => {
 
   }, [userErr]);
 
-  
-  useEffect(() => {
-    if (errors) {
-      window.setTimeout(() => {
-        setErrors([])
-      }, 5000);
-    }
-  }, [errors])
 
   const handleSubmit = e => {
     e.preventDefault();

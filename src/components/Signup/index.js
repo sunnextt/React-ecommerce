@@ -46,15 +46,6 @@ const Signup = props => {
     setErrors([]);
   };
 
-  
-  useEffect(() => {
-    if (errors) {
-      window.setTimeout(() => {
-        setErrors([])
-      }, 5000);
-    }
-  }, [errors])
-
   const handleFormSubmit = event => {
     event.preventDefault();
     dispatch(signUpUserStart({
@@ -63,6 +54,12 @@ const Signup = props => {
       password,
       confirmPassword
     }));
+    if (errors) {
+      // setSubmit(false)
+      window.setTimeout(() => {
+        setErrors([])
+      }, 5000);
+    }
   }
 
   const configAuthWrapper = {

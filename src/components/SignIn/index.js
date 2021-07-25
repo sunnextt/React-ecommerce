@@ -55,20 +55,12 @@ const SignIn = props => {
     dispatch(emailSignInStart({ email, password }));
     if (errors) {
       setSubmit(false)
-      window.setTimeout(() => {
+      setTimeout(() => {
         setErrors([])
       }, 5000);
     }
   }
 
-
-  useEffect(() => {
-    if (errors) {
-      window.setTimeout(() => {
-        setErrors([])
-      }, 4000);
-    }
-  }, [errors])
 
   const handleGoogleSignIn = () => {
     dispatch(googleSignInStart());
