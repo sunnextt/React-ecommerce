@@ -35,6 +35,15 @@ const EmailPassword = props => {
 
   }, [userErr]);
 
+  
+  useEffect(() => {
+    if (errors) {
+      window.setTimeout(() => {
+        setErrors([])
+      }, 5000);
+    }
+  }, [errors])
+
   const handleSubmit = e => {
     e.preventDefault();
     dispatch(resetPasswordStart({ email }));
@@ -50,16 +59,15 @@ const EmailPassword = props => {
 
         {errors.length > 0 && (
           <ul>
-            {errors.map((e, index) => {
+            {errors.map((err, index) => {
               return (
-                <li key={index}>
-                  {e}
+                <li style={{listStyle: "none", color: "#c51244", textAlign: "center", marginLeft: "-40px"}} key={index}>
+                  {err}
                 </li>
               );
             })}
           </ul>
         )}
-
         <form onSubmit={handleSubmit}>
 
           <FormInput

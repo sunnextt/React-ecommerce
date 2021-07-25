@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { emailSignInStart, googleSignInStart } from './../../redux/User/user.actions';
+import {ImSpinner3} from "react-icons/im";
 
 import './styles.scss';
 
@@ -10,16 +11,20 @@ import FormInput from './../forms/FormInput';
 import Button from './../forms/Button';
 
 const mapState = ({ user }) => ({
-  currentUser: user.currentUser
+  currentUser: user.currentUser,
+  userErr: user.userErr
 });
+
 
 const SignIn = props => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { currentUser } = useSelector(mapState);
+  const { currentUser , userErr } = useSelector(mapState);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
   const [submit, setSubmit] = useState(false)
+  const [errors, setErrors] = useState([]);
+
 
   useEffect(() => {
     if (currentUser) {
@@ -32,16 +37,38 @@ const SignIn = props => {
   const resetForm = () => {
     setEmail('');
     setPassword('');
+    setErrors([]);
+
   };
+
+
+  useEffect(() => {
+    if (Array.isArray(userErr) && userErr.length > 0) {
+      setErrors(userErr);
+    }
+
+  }, [userErr]);
 
   const handleSubmit = e => {
     e.preventDefault();
     setSubmit(true)
     dispatch(emailSignInStart({ email, password }));
-    window.setTimeout(() => {
-    setSubmit(false)
-    }, 10000);
+    if (errors) {
+      setSubmit(false)
+      window.setTimeout(() => {
+        setErrors([])
+      }, 5000);
+    }
   }
+
+
+  useEffect(() => {
+    if (errors) {
+      window.setTimeout(() => {
+        setErrors([])
+      }, 4000);
+    }
+  }, [errors])
 
   const handleGoogleSignIn = () => {
     dispatch(googleSignInStart());
@@ -54,6 +81,19 @@ const SignIn = props => {
   return (
     <AuthWrapper {...configAuthWrapper}>
       <div className="formWrap">
+
+        {errors.length > 0 && (
+          <ul>
+            {errors.map((err, index) => {
+              return (
+                <li style={{listStyle: "none", color: "#c51244", textAlign: "center", marginLeft: "-40px"}} key={index}>
+                  {err}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
         <form onSubmit={handleSubmit}>
 
           <FormInput
@@ -73,7 +113,7 @@ const SignIn = props => {
           />
 
           <Button type="submit">
-            {!submit ? "LogIn" : "login..."}
+            {!submit ? "LogIn" : <ImSpinner3/>}
           </Button>
 
           <div className="socialSignin">

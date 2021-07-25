@@ -79,15 +79,15 @@ const Header = props => {
 
             {!currentUser && [
               <li key={1} className="hideOnMobile">
-                <Link to="/registration">
+                <a href="/registration">
                   Register
-                </Link>
+                </a>
               </li>,
               <li key={2}>
-                <Link to="/login">
+                <a href="/login">
                   Login
                   <i className="fas fa-user-circle"></i>
-                </Link>
+                </a>
               </li>
             ]}
 

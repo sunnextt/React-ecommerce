@@ -46,6 +46,15 @@ const Signup = props => {
     setErrors([]);
   };
 
+  
+  useEffect(() => {
+    if (errors) {
+      window.setTimeout(() => {
+        setErrors([])
+      }, 5000);
+    }
+  }, [errors])
+
   const handleFormSubmit = event => {
     event.preventDefault();
     dispatch(signUpUserStart({
@@ -68,7 +77,7 @@ const Signup = props => {
           <ul>
             {errors.map((err, index) => {
               return (
-                <li key={index}>
+                <li style={{listStyle: "none", color: "#c51244", textAlign: "center", marginLeft: "-40px"}} key={index}>
                   {err}
                 </li>
               );
