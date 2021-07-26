@@ -11,3 +11,11 @@ export default function* rootSaga() {
     call(ordersSagas),
   ])
 }
+
+
+
+
+
+// const sagaMiddleware = createSagaMiddleware()
+// const store = ...
+// sagaMiddleware.run(rootSaga)
