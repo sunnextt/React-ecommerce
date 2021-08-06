@@ -16,7 +16,6 @@ export function* getSnapshotFromUserAuth(user, additionalData = {}) {
     );
 
   } catch (err) {
-    // console.log(err);
     yield put(
     userError([err.message])
     );
@@ -30,7 +29,6 @@ export function* emailSignIn({ payload: { email, password } }) {
     yield getSnapshotFromUserAuth(user);
 
   } catch (err) {
-    // console.log(err);
     yield put(
     userError([err.message])
     );
